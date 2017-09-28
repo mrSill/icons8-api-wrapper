@@ -1,0 +1,27 @@
+{
+    "name": "mrsill/icons8-api-wrapper",
+    "description": "Simple, minimum abstraction Icons8 API wrapper",
+    "homepage": "https://github.com/mrsill/icons8-api-wrapper",
+    "authors": [ 
+        {
+            "name": "Aliaksandr Sidaruk",
+            "email": "aliaksandr.sidaruk@yandex.ru",
+            "homepage": "https://github.com/mrsill"
+
+        }
+    ],
+    "license": "MIT",
+    "require": {
+        "php": ">=5.3",
+        "guzzlehttp/guzzle": "^6.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.0.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "mrSill\\Icons8\\": "src",
+            "Tests\\": "tests/"
+        }
+    }
+}
