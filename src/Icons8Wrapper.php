@@ -55,7 +55,7 @@ class Icons8Wrapper
      * 
      * @return array
      */
-    public function getAllIcons($amount, $offset = 0, $platform = null)
+    public function getAllIcons($amount = 25, $offset = 0, $platform = null)
     {
         $query = [
             'amount'   => $amount,
@@ -80,7 +80,7 @@ class Icons8Wrapper
      * 
      * @return array
      */
-    public function searchIcons($term, $amount, $offset = 0, $platform = null)
+    public function searchIcons($term, $amount = 25, $offset = 0, $platform = null)
     {
         $query = [
             'term'     => $term,
@@ -104,7 +104,7 @@ class Icons8Wrapper
      * 
      * @return array
      */
-    public function getNewestIcons($amount, $offset = 0, $platform = null)
+    public function getNewestIcons($amount = 25, $offset = 0, $platform = null)
     {
         $query = [
             'amount'   => $amount,
@@ -127,7 +127,7 @@ class Icons8Wrapper
      * 
      * @return array
      */
-    public function getSimilarIcons($id, $amount, $offset = 0)
+    public function getSimilarIcons($id, $amount = 25, $offset = 0)
     {
         $query = [
             'id'       => $id,
@@ -209,7 +209,7 @@ class Icons8Wrapper
      * 
      * @return array
      */
-    public function getCategory($category, $amount, $offset = 0, $platform = null, $attributes = null)
+    public function getCategory($category, $amount = 25, $offset = 0, $platform = null, $attributes = null)
     {
         $query = [
             'category'   => $category,
@@ -233,12 +233,11 @@ class Icons8Wrapper
      * 
      * @return array
      */
-    public function suggest($term, $amount, $platform = null)
+    public function suggest($term, $amount = 25, $platform = null)
     {
         $query = [
             'term'     => $term,
             'amount'   => $amount,
-            'offset'   => $offset,
             'platform' => $platform
         ];
       
