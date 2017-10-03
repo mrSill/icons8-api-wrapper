@@ -12,16 +12,16 @@ use mrSill\Icons8\Response\Response;
 class Request
 {
     const API_ENDPOINT = 'https://api.icons8.com/api/iconsets';
-    const TIMEOUT      = 2.0;
+    const TIMEOUT      = 3.0;
     /** @var \GuzzleHttp\Client */
     private $client;
     
-    public function __construct()
+    public function __construct($endpoint = self::API_ENDPOINT, $timeout = self::TIMEOUT)
     {
         $this->client = new Client([
             // Base URI is used with relative requests
-            'base_uri' => self::API_ENDPOINT,
-            'timeout'  => self::TIMEOUT,
+            'base_uri' => $endpoint,
+            'timeout'  => $timeout,
         ]);
     }
     
