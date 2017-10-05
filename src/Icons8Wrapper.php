@@ -2,7 +2,9 @@
 
 namespace mrSill\Icons8;
 
+use GuzzleHttp\Exception\RequestException;
 use mrSill\Icons8\Request\Request;
+use mrSill\Icons8\Icons8Platform as Platform;
 
 /**
  * Class Icons8Wrapper
@@ -12,12 +14,22 @@ use mrSill\Icons8\Request\Request;
  */
 class Icons8Wrapper
 {
+    const AMOUNT = 25;
+
     /** @var \mrSill\Icons8\Request\Request */
     protected $request;
+    /** @var array */
+    protected $lastQuery = [];
+    /** @var  \mrSill\Icons8\Response\Response */
+    protected $lastResponse;
 
-    public function __construct()
+    /**
+     * @param string|null $authToken
+     */
+    public function __construct($authToken = null)
     {
         $this->request = new Request();
+        $this->request->setAuthToken($authToken);
     }
 
     /**
@@ -58,7 +70,7 @@ class Icons8Wrapper
      *
      * @return array
      */
-    public function getAllIcons($amount = 25, $offset = 0, $platform = Icons8Platform::ALL_PLATFORMS)
+    public function getAllIcons($amount = self::AMOUNT, $offset = 0, $platform = Platform::ALL_PLATFORMS)
     {
         $query = [
             'amount'   => $amount,
@@ -83,7 +95,7 @@ class Icons8Wrapper
      *
      * @return array
      */
-    public function searchIcons($term, $amount = 25, $offset = 0, $platform = Icons8Platform::ALL_PLATFORMS)
+    public function searchIcons($term, $amount = self::AMOUNT, $offset = 0, $platform = Platform::ALL_PLATFORMS)
     {
         $query = [
             'term'     => $term,
@@ -107,7 +119,7 @@ class Icons8Wrapper
      *
      * @return array
      */
-    public function getNewestIcons($amount = 25, $offset = 0, $platform = Icons8Platform::ALL_PLATFORMS)
+    public function getNewestIcons($amount = self::AMOUNT, $offset = 0, $platform = Platform::ALL_PLATFORMS)
     {
         $query = [
             'amount'   => $amount,
@@ -130,7 +142,7 @@ class Icons8Wrapper
      *
      * @return array
      */
-    public function getSimilarIcons($id, $amount = 25, $offset = 0)
+    public function getSimilarIcons($id, $amount = self::AMOUNT, $offset = 0)
     {
         $query = [
             'id'     => $id,
@@ -172,7 +184,7 @@ class Icons8Wrapper
      *
      * @return array
      */
-    public function getInfoList($platform = Icons8Platform::ALL_PLATFORMS)
+    public function getInfoList($platform = Platform::ALL_PLATFORMS)
     {
         $query = [
             'platform' => $platform
@@ -190,7 +202,7 @@ class Icons8Wrapper
      *
      * @return array
      */
-    public function getCategories($platform = Icons8Platform::ALL_PLATFORMS)
+    public function getCategories($platform = Platform::ALL_PLATFORMS)
     {
         $query = [
             'platform' => $platform
@@ -212,7 +224,7 @@ class Icons8Wrapper
      *
      * @return array
      */
-    public function getCategory($category, $amount = 25, $offset = 0, $platform = Icons8Platform::ALL_PLATFORMS, $attributes = null)
+    public function getCategory($category, $amount = self::AMOUNT, $offset = 0, $platform = Platform::ALL_PLATFORMS, $attributes = null)
     {
         $query = [
             'category'   => $category,
@@ -236,7 +248,7 @@ class Icons8Wrapper
      *
      * @return array
      */
-    public function suggest($term, $amount = 25, $platform = Icons8Platform::ALL_PLATFORMS)
+    public function suggest($term, $amount = self::AMOUNT, $platform = Platform::ALL_PLATFORMS)
     {
         $query = [
             'term'     => $term,
@@ -253,31 +265,58 @@ class Icons8Wrapper
      * @param string $method a API method
      * @param array  $query  parameters
      *
-     * @return array|false
+     * @return array
      */
     private function apiCall($method, array $query = [])
     {
-        // this code not working!!!
-        $args = ['query' => $query];
+        $answer = [
+            'success'    => false,
+            'parameters' => $query
+        ];
 
-        // todo remove this after debuging
-        $args = [];
-        $method .= '?' . http_build_query($query);
-        // end for remove
+        try {
+            $this->lastResponse = $this->request->request($method, $query);
+            $result = $this->lastResponse->getBody()->toArray();
 
-        $response = $this->request->request($method, $args);
+            if (isset($result['error'])) {
+                $answer['error'] = [
+                    'message' => $result['error'],
+                    'code'    => 400
+                ];
+            } else {
+                $answer['success'] = true;
+                $answer['result'] = $result['result'];
+            }
+        } catch (RequestException $e) {
+            $request = $e->getRequest();
 
-        if ($response->getStatusCode() != 200) {
-            // todo provide error message
-            throw new \Exception("Bad response", $response->getStatusCode());
+            $answer['error'] = [
+                'message' => $e->getMessage(),
+                'code'    => $e->getCode()
+            ];
+
+            if ($e->hasResponse()) {
+                $this->lastResponse = $e->getResponse();
+            } else {
+                $this->lastResponse = null;
+            }
+        } catch (\Exception $e) {
+            $answer['error'] = [
+                'message' => $e->getMessage(),
+                'code'    => $e->getCode()
+            ];
         }
 
-        $result = $response->getBody()->toArray();
+        return $answer;
+    }
 
-        if (isset($result['error'])) {
-            throw new \Exception($result['error'], 400);
-        }
-
-        return $result;
+    /**
+     * Return last response object
+     *
+     * @return \mrSill\Icons8\Response\Response
+     */
+    public function lastResponse()
+    {
+        return $this->lastResponse;
     }
 }
