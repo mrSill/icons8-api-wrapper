@@ -14,15 +14,11 @@ use mrSill\Icons8\Response\Response;
  */
 class Request
 {
-    const API_ENDPOINT    = 'https://api.icons8.com/api/iconsets/';
-    const API_ENDPOINT_V3 = 'https://api.icons8.com/api/iconsets/v3/';
-    const TIMEOUT         = 2.0;
+    const API_ENDPOINT = 'https://api.icons8.com/api/iconsets/';
+    const TIMEOUT      = 5.0;
 
     /** @var \GuzzleHttp\Client */
     private $client;
-
-    /** @var string */
-    private $authToken;
 
     private $headers = [];
 
@@ -42,7 +38,7 @@ class Request
      */
     public function setAuthToken($token)
     {
-        $this->authToken = $token;
+        $this->setHeader('AUTH-ID', $token);
 
         return $this;
     }
@@ -64,19 +60,25 @@ class Request
      * Make an HTTP GET request - for retrieving data
      *
      * @param   string $apiMethod URL of the API request method
-     * @param   array  $args      Assoc array of arguments (usually your data)
+     * @param   array  $query     Assoc array of queries
      *
      * @return  Response
      */
     public function request($apiMethod, array $query = [])
     {
-        if ($this->authToken) {
-            $this->setHeader('AUTH-ID', $this->authToken);
-        }
+        return $this->get($this->buildQuery($apiMethod, $query));
+    }
 
+    /**
+     * @param string $endpoint
+     *
+     * @return \mrSill\Icons8\Response\Response
+     */
+    public function get($endpoint)
+    {
         $request = new RequestService(
             'GET',
-            $this->getURI($apiMethod, $query),
+            $endpoint,
             $this->headers
         );
 
@@ -86,12 +88,21 @@ class Request
     /**
      * Get URI for Request
      *
-     * @param string $apiMethod
+     * @param string       $apiMethod
+     * @param array|string $query
      *
      * @return string
      */
-    private function getURI($apiMethod, $query)
+    protected function buildQuery($apiMethod, array $query = [])
     {
-        return sprintf("%s?%s", $apiMethod, http_build_query($query));
+        if (!empty($query)) {
+            $query = is_array($query)
+                ? http_build_query($query)
+                : $query;
+        } else {
+            $query = null;
+        }
+
+        return sprintf("%s?%s", $apiMethod, $query);
     }
 }

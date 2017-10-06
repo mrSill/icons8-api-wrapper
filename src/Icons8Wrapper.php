@@ -199,16 +199,19 @@ class Icons8Wrapper
      * Returns list of categories.
      *
      * @param string $platform the platform that we are searching categories for
+     * @param string $language the language code to get localized result
+     *                         Possible values: en-US , fr-FR , de-DE , it-IT , pt-BR , pl-PL , ru-RU , es-ES
      *
      * @return array
      */
-    public function getCategories($platform = Platform::ALL_PLATFORMS)
+    public function getCategories($platform = Platform::ALL_PLATFORMS, $language = 'en_US')
     {
         $query = [
-            'platform' => $platform
+            'platform' => $platform,
+            'language' => $language
         ];
 
-        $result = $this->apiCall('categories', $query);
+        $result = $this->apiCall('v3/categories', $query);
 
         return $result;
     }
@@ -276,7 +279,7 @@ class Icons8Wrapper
 
         try {
             $this->lastResponse = $this->request->request($method, $query);
-            $result = $this->lastResponse->getBody()->toArray();
+            $result = (array)$this->lastResponse->getBody()->toArray();
 
             if (isset($result['error'])) {
                 $answer['error'] = [
