@@ -12,6 +12,7 @@ class Icons8Platform
 {
     const ALL_PLATFORMS        = null;
     const IOS7_PLATFORM        = 'ios7';
+    const IOS11_PLATFORM       = 'ios11';
     const WIN10_PLATFORM       = 'win10';
     const WIN8_PLATFORM        = 'win8';
     const MATERIAL_PLATFORM    = 'androidL';
@@ -25,7 +26,9 @@ class Icons8Platform
     const WIRED_PLATFORM       = 'Dusk_Wired';
     const ANDROID_PLATFORM     = 'android';
 
+    /** @var array */
     protected $names = [
+        self::IOS7_PLATFORM        => 'iPhone/iOS 7',
         self::IOS7_PLATFORM        => 'iPhone/iOS 11',
         self::WIN10_PLATFORM       => 'Windows 10/Threshold',
         self::WIN8_PLATFORM        => 'Windows 8/Metro',
