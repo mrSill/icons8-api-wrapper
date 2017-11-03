@@ -67,10 +67,10 @@ abstract class AbstractRequest
             case self::AUTH_WITH_HEADER:
                 $this->setHeader(self::AUTH_HEADER_NAME, $token);
                 break;
-            case self::AUTH_QUERY_NAME:
+            case self::AUTH_WITH_QUERY:
                 $this->setQuery(self::AUTH_QUERY_NAME, $token);
                 break;
-            case self::AUTH_COOKIE_NAME:
+            case self::AUTH_WITH_COOKIE:
                 $this->setCookie(self::AUTH_COOKIE_NAME, $token);
                 break;
             default:

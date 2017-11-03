@@ -30,36 +30,69 @@ class AbstractRequestTest extends TestCase
     {
         $stub = $this->getAbstractRequestMock();
 
-        $this->setExpectedException(\Exception::class);
-
-        // Empty auth token
-        $this->throwException($stub->setAuth(null));
-
-        // Unsupported auth method
-        $this->throwException($stub->setAuth(self::AUTH_TOKEN, 'Unsupported'));
-
-        $this->assertInstanceOf(
-            Request::class,
+        $this->assertAttributeSame(
+            [Request::AUTH_HEADER_NAME => self::AUTH_TOKEN],
+            'headers',
             $stub->setAuth(self::AUTH_TOKEN),
             'Auth with default type is fail'
         );
 
-        $this->assertInstanceOf(
-            Request::class,
+        $this->assertAttributeSame(
+            [Request::AUTH_HEADER_NAME => self::AUTH_TOKEN],
+            'headers',
             $stub->setAuth(self::AUTH_TOKEN, Request::AUTH_WITH_HEADER),
             'Auth with http header is fail'
         );
 
-        $this->assertInstanceOf(
-            Request::class,
+        $this->assertAttributeSame(
+            [Request::AUTH_COOKIE_NAME => self::AUTH_TOKEN],
+            'cookies',
             $stub->setAuth(self::AUTH_TOKEN, Request::AUTH_WITH_COOKIE),
             'Auth with cookie is fail'
         );
 
-        $this->assertInstanceOf(
-            Request::class,
+        $this->assertAttributeSame(
+            [Request::AUTH_QUERY_NAME => self::AUTH_TOKEN],
+            'queries',
             $stub->setAuth(self::AUTH_TOKEN, Request::AUTH_WITH_QUERY),
             'Auth with http query is fail'
+        );
+
+        try {
+            // Empty auth token
+            $stub->setAuth(null);
+            // Unsupported auth method
+            $stub->setAuth(self::AUTH_TOKEN, 'Unsupported');
+            // Impossible. Set FAIL
+            $this->assertTrue(false);
+        } catch (\Exception $e) {
+            $this->throwException($e);
+        }
+    }
+
+    public function testSetQuery()
+    {
+        $stub = $this->getAbstractRequestMock();
+
+        $query = [
+            'foo' => 'bar',
+            'bar' => 'foo'
+        ];
+
+        // Set queries as array
+        $this->assertAttributeSame(
+            $query,
+            'queries',
+            $stub->setQuery($query)
+        );
+
+        $query['bar'] = 'bar';
+
+        // Set query as key-value
+        $this->assertAttributeSame(
+            $query,
+            'queries',
+            $stub->setQuery('bar', 'bar')
         );
     }
 }
