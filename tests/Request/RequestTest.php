@@ -3,13 +3,20 @@
 namespace Tests\Request;
 
 use mrSill\Icons8\Request\Request;
+use mrSill\Icons8\Icons8Platform as Platform;
 
 class RequestTest extends \PHPUnit_Framework_TestCase
 {
+    const AUTH_TOKEN = ICONS8_TEST_TOKEN;
+
     public function testRequest()
     {
         $request = new Request();
         $this->assertInstanceOf('mrSill\Icons8\Request\Request', $request);
+
+        $request->setQuery(['platform' => Platform::IOS7_PLATFORM]);
+
+        $request->setQuery('platform', Platform::ALL_PLATFORMS);
 
         $response = $request->request('categories');
         $this->assertInstanceOf('mrSill\Icons8\Response\Response', $response);
@@ -19,20 +26,36 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     {
         $request = new Request();
 
+        // Deprecated auth
+        $request->setAuthToken(self::AUTH_TOKEN);
+
         try {
             // Wrong Auth type
-            $request->setAuth(ICONS8_TEST_TOKEN, 'Unsupported_Auth_Type');
+            $request->setAuth(self::AUTH_TOKEN, 'Unsupported_Auth_Type');
             $this->assertTrue(false);
 
             // Wrong Auth token
-            $request->setAuth(null, Request::AUTH_WITH_HEADER);
+            $request->setAuth(null);
             $this->assertTrue(false);
         } catch (\Exception $e) {
             $this->assertTrue(true);
         }
 
         try {
-            $request->setAuth(ICONS8_TEST_TOKEN);
+            // With default auth type
+            $request->setAuth(self::AUTH_TOKEN);
+            $this->assertTrue(true);
+
+            // With http header auth type
+            $request->setAuth(self::AUTH_TOKEN, Request::AUTH_WITH_HEADER);
+            $this->assertTrue(true);
+
+            // With http header auth type
+            $request->setAuth(self::AUTH_TOKEN, Request::AUTH_WITH_COOKIE);
+            $this->assertTrue(true);
+
+            // With http header auth type
+            $request->setAuth(self::AUTH_TOKEN, Request::AUTH_WITH_QUERY);
             $this->assertTrue(true);
         } catch (\Exception $e) {
             echo $e->getMessage();
