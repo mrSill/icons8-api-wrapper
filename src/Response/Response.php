@@ -24,17 +24,18 @@ class Response
     {
         $this->response = $response;
     }
-    
+
     /**
-     * @return \GuzzleHttp\Response
+     * @return \GuzzleHttp\Psr7\Response
      */
     public function getResponse()
     {
         return $this->response;
     }
-    
+
     /**
-     * @return ResponseBodyInterface
+     * @return \mrSill\Icons8\Response\JsonBodyResponse|\mrSill\Icons8\Response\XmlBodyResponse
+     * @throws \Exception
      */
     public function getBody()
     {
@@ -74,9 +75,9 @@ class Response
     {
         return $code == $this->getStatusCode();
     }
-    
+
     /**
-     * @return string|null
+     * @return array|null|string
      */
     public function getContentType()
     {
@@ -86,24 +87,34 @@ class Response
                 : $this->response->getHeader('Content-Type')
             : null;
     }
-    
+
     /**
      * @return bool
      */
     public function hasErrors()
     {
-        $body = $this->getBody()->toArray();
+        try {
+            $body = $this->getBody()->toArray();
+        }
+        catch (\Exception $e) {
+            $body = null;
+        }
         
         return isset($body['error']);
     }
-    
+
     /**
      * @return string|null
      */
     public function getError()
     {
-        $body = $this->getBody()->toArray();
-        
+        try {
+            $body = $this->getBody()->toArray();
+        }
+        catch (\Exception $e) {
+            $body = null;
+        }
+
         return isset($body['error']) ? $body['error'] : null;
     }
 }
