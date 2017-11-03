@@ -15,20 +15,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('mrSill\Icons8\Response\Response', $response);
     }
 
-    public function testAuth()
-    {
-        $request = new Request();
-
-        try {
-            $request->setAuth(ICONS8_TEST_TOKEN);
-            $this->assertTrue(true);
-        } catch (\Exception $e) {
-            echo $e->getMessage();
-            $this->assertTrue(false);
-        }
-    }
-
-    public function testWrongAuth()
+    public function testSetAuth()
     {
         $request = new Request();
 
@@ -42,6 +29,14 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             $this->assertTrue(false);
         } catch (\Exception $e) {
             $this->assertTrue(true);
+        }
+
+        try {
+            $request->setAuth(ICONS8_TEST_TOKEN);
+            $this->assertTrue(true);
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            $this->assertTrue(false);
         }
     }
 }
