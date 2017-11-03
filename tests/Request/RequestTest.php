@@ -4,11 +4,10 @@ namespace Tests\Request;
 
 use mrSill\Icons8\Request\Request;
 use mrSill\Icons8\Icons8Platform as Platform;
+use Tests\TestCase;
 
-class RequestTest extends \PHPUnit_Framework_TestCase
+class RequestTest extends TestCase
 {
-    const AUTH_TOKEN = ICONS8_TEST_TOKEN;
-
     public function testRequest()
     {
         $request = new Request();
@@ -22,12 +21,17 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('mrSill\Icons8\Response\Response', $response);
     }
 
-    public function testSetAuth()
+    public function testDeprecatedSetAuth()
     {
         $request = new Request();
 
-        // Deprecated auth
+        // Deprecated auth method
         $request->setAuthToken(self::AUTH_TOKEN);
+    }
+
+    public function testSetAuth()
+    {
+        $request = new Request();
 
         try {
             // Wrong Auth type
@@ -38,6 +42,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             $request->setAuth(null);
             $this->assertTrue(false);
         } catch (\Exception $e) {
+            echo $e->getMessage();
             $this->assertTrue(true);
         }
 
