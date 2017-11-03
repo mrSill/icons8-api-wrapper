@@ -40,13 +40,16 @@ class Request extends AbstractRequest
      * @param   string $endpoint URL of the API request method
      * @param   array  $query    Assoc array of arguments (usually your data)
      *
-     * @return  Response
-     * @throws \Exception
+     * @return Response
      */
     public function request($endpoint, array $query = [])
     {
-        if ($this->authToken) {
-            $this->setAuth($this->authToken);
+        try {
+            if ($this->authToken) {
+                $this->setAuth($this->authToken);
+            }
+        } catch (\Exception $e) {
+            // Auth is fail. Ignore this error
         }
 
         $this->setQuery($query);

@@ -59,6 +59,10 @@ abstract class AbstractRequest
      */
     public function setAuth($token, $authType = self::AUTH_WITH_HEADER)
     {
+        if (empty($token)) {
+            throw new \Exception('Invalid auth token');
+        }
+
         switch ($authType) {
             case self::AUTH_WITH_HEADER:
                 $this->setHeader(self::AUTH_HEADER_NAME, $token);
