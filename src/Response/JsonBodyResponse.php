@@ -17,6 +17,6 @@ class JsonBodyResponse extends AbstractResponseBody implements ResponseBodyInter
      */
     public function toArray()
     {
-        return json_decode($this->rawBody);
+        return json_decode($this->rawBody, true);
     }
 }
