@@ -56,7 +56,7 @@ class ResponseTest extends TestCase
 
     public function testErrors()
     {
-        $response  = $this->getResponse($this->endpoints['v1']);
+        $response = $this->getResponse($this->endpoints['v1']);
 
         $this->assertFalse($response->hasErrors());
         $this->assertNull($response->getError());
@@ -64,31 +64,35 @@ class ResponseTest extends TestCase
 
     public function testGetBody()
     {
-        $response  = $this->getResponse($this->endpoints['v1']);
+        $response = $this->getResponse($this->endpoints['v1']);
 
         $this->assertInstanceOf(
             XmlBodyResponse::class,
             $response->getBody()
         );
 
-        $response  = $this->getResponse($this->endpoints['v2']);
+        $response = $this->getResponse($this->endpoints['v2']);
 
         $this->assertInstanceOf(
             JsonBodyResponse::class,
             $response->getBody()
         );
 
-        $response  = $this->getResponse($this->endpoints['v3']);
+        $response = $this->getResponse($this->endpoints['v3']);
 
         $this->assertInstanceOf(
             JsonBodyResponse::class,
             $response->getBody()
         );
+
+        $response = $this->getResponse('https://api.icons8.com/api');
+
+        $this->throwException($response->getBody());
     }
 
     public function testXMLBody()
     {
-        $response  = $this->getResponse($this->endpoints['v1']);
+        $response = $this->getResponse($this->endpoints['v1']);
 
         // check content type
         $this->assertEquals($response->getContentType(), Response::XML_CONTENT_TYPE);
@@ -100,12 +104,12 @@ class ResponseTest extends TestCase
 
     public function testJSONBody()
     {
-        $response  = $this->getResponse($this->endpoints['v2']);
+        $response = $this->getResponse($this->endpoints['v2']);
 
         // check content type
         $this->assertEquals($response->getContentType(), Response::JSON_CONTENT_TYPE);
 
-        $response  = $this->getResponse($this->endpoints['v3']);
+        $response = $this->getResponse($this->endpoints['v3']);
 
         // check content type
         $this->assertEquals($response->getContentType(), Response::JSON_CONTENT_TYPE);
