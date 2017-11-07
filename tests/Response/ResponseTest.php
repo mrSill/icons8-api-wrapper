@@ -85,7 +85,7 @@ class ResponseTest extends TestCase
             $response->getBody()
         );
 
-        $response = $this->getResponse('https://api.icons8.com/api');
+        $this->setExpectedException(\Exception::class);
 
         $this->throwException($response->getBody());
     }
@@ -96,8 +96,6 @@ class ResponseTest extends TestCase
 
         // check content type
         $this->assertEquals($response->getContentType(), Response::XML_CONTENT_TYPE);
-
-        // $this->setExpectedException(\Exception::class);
 
         $this->assertTrue(is_array($response->getBody()->toArray()));
     }
@@ -113,8 +111,6 @@ class ResponseTest extends TestCase
 
         // check content type
         $this->assertEquals($response->getContentType(), Response::JSON_CONTENT_TYPE);
-
-        // $this->setExpectedException(\Exception::class);
 
         $this->assertTrue(is_array($response->getBody()->toArray()));
     }
