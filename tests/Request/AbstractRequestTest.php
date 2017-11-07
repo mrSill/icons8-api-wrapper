@@ -3,10 +3,14 @@
 namespace Tests\Request;
 
 use mrSill\Icons8\Request\AbstractRequest;
-use mrSill\Icons8\Request\Request;
 use mrSill\Icons8\Response\Response;
 use Tests\TestCase;
 
+/**
+ * Class AbstractRequestTest
+ *
+ * @package Tests\Request
+ */
 class AbstractRequestTest extends TestCase
 {
     /**

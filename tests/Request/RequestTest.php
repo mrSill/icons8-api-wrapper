@@ -6,6 +6,11 @@ use mrSill\Icons8\Request\Request;
 use mrSill\Icons8\Icons8Platform as Platform;
 use Tests\TestCase;
 
+/**
+ * Class RequestTest
+ *
+ * @package Tests\Request
+ */
 class RequestTest extends TestCase
 {
     public function testRequest()
