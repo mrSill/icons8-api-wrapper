@@ -68,6 +68,8 @@ class Request extends AbstractRequest
      * @param string $endpoint
      *
      * @return \mrSill\Icons8\Response\Response
+     * @deprecated
+     * @see request method
      */
     public function get($endpoint)
     {
