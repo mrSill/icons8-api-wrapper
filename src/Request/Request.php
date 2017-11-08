@@ -29,7 +29,7 @@ class Request extends AbstractRequest
      */
     public function setAuthToken($token)
     {
-        $this->authToken = $token;
+        $this->setHeader('AUTH-ID', $token);
 
         return $this;
     }
@@ -60,5 +60,17 @@ class Request extends AbstractRequest
         );
 
         return new Response($this->httpClient->send($request, $this->getRequestParams()));
+    }
+
+    /**
+     * Simple alias for request method
+     *
+     * @param string $endpoint
+     *
+     * @return \mrSill\Icons8\Response\Response
+     */
+    public function get($endpoint)
+    {
+        return $this->request($endpoint);
     }
 }
